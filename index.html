@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <title>Предложка — MIKLYXASHOW</title>
+  <meta name="description" content="Предлагай видео для MIKLYXASHOW, голосуй и следи за просмотренными материалами.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <header class="header">
+    <a class="logo" href="#"><span class="logo-icon">M</span><span>MIKLYXA<span class="purple">SHOW</span><small>ПРЕДЛОЖКА</small></span></a>
+    <nav class="top-nav">
+      <a class="active" href="#feed">Лента</a>
+      <a href="#submit">Предложить</a>
+      <a href="#mine">Мои предложения</a>
+    </nav>
+    <div class="header-actions">
+      <button id="themeBtn" class="icon-btn" title="Сменить тему" aria-label="Сменить тему">☼</button>
+      <button id="authBtn" class="user-btn">Войти</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="side-label">ПОДБОРКА</div>
+      <button class="side-link active" data-status="pending">◷ <span>Не смотрели</span></button>
+      <button class="side-link" data-status="watched">✓ <span>Просмотрено</span></button>
+      <div class="side-label spaced">КАТЕГОРИИ</div>
+      <button class="side-link category active" data-category="Все">▦ <span>Все</span></button>
+      <button class="side-link category" data-category="Клипы">▣ <span>Клипы стримеров</span></button>
+      <button class="side-link category" data-category="Приколы">☻ <span>Приколы</span></button>
+      <button class="side-link category" data-category="Игры">▤ <span>Гейминг</span></button>
+      <button class="side-link category" data-category="Видео">▷ <span>Видео</span></button>
+      <button class="side-link category" data-category="Вопросы">? <span>Вопросы</span></button>
+      <div class="side-card">
+        <b>Есть что показать?</b>
+        <p>Предложи ролик для следующего эфира.</p>
+        <a href="#submit" class="side-cta">Добавить предложение <span>→</span></a>
+      </div>
+      <p class="side-foot">Сделано для сообщества<br>MIKLYXASHOW</p>
+    </aside>
+
+    <section class="content" id="feed">
+      <div class="mobile-title"><span class="live-dot"></span> СООБЩЕСТВО MIKLYXASHOW</div>
+      <div class="page-heading">
+        <div><div class="eyebrow">СООБЩЕСТВО MIKLYXASHOW</div><h1>Лента</h1><p>Предлагайте видео, обсуждайте и выбирайте, что посмотреть на стриме.</p></div>
+        <button class="primary-btn" id="openSubmit">＋ Предложить</button>
+      </div>
+
+      <div class="toolbar">
+        <div class="tabs">
+          <button class="tab active" data-sort="best">Лучшее</button>
+          <button class="tab" data-sort="new">Новое</button>
+        </div>
+        <div class="filters">
+          <select id="periodFilter" aria-label="Период"><option value="all">За всё время</option><option value="today">Сегодня</option><option value="week">За неделю</option><option value="month">За месяц</option></select>
+          <select id="typeFilter" aria-label="Тип"><option value="all">Все типы</option><option value="media">Медиа</option><option value="question">Вопросы</option></select>
+        </div>
+      </div>
+      <div class="search-wrap"><span>⌕</span><input id="search" placeholder="Поиск по названию и описанию…"><kbd>⌘ K</kbd></div>
+      <div class="active-filters"><span id="filterStatus">Не смотрели</span><button id="resetFilters">Сбросить фильтры ×</button></div>
+      <div id="feedList" class="feed-list"><div class="empty-state">Загружаем предложения…</div></div>
+      <button id="loadMore" class="load-more" hidden>Загрузить ещё</button>
+    </section>
+
+    <aside class="rightbar">
+      <div class="right-card profile-card">
+        <div class="profile-banner"></div>
+        <div class="avatar">M</div>
+        <h3>MIKLYXASHOW</h3>
+        <p>Предложка сообщества</p>
+        <a href="https://twitch.tv/miklyxashow" target="_blank" rel="noreferrer">Открыть Twitch ↗</a>
+      </div>
+      <div class="right-card">
+        <div class="right-title">КАК ЭТО РАБОТАЕТ</div>
+        <ol class="how-list"><li><i>1</i><span><b>Предложи</b><small>Добавь ссылку или файл</small></span></li><li><i>2</i><span><b>Получи голоса</b><small>Сообщество оценит идею</small></span></li><li><i>3</i><span><b>Попади на эфир</b><small>Стример выберет материал</small></span></li></ol>
+      </div>
+      <div class="right-card rules"><div class="right-title">ПРАВИЛА</div><p>Публикуй только материалы, которыми имеешь право делиться. Запрещены спам, травля, личные данные и незаконный контент. Публикации проходят модерацию.</p></div>
+    </aside>
+  </main>
+
+  <footer><span>MIKLYXASHOW · ПРЕДЛОЖКА</span><span>Платформа сообщества</span></footer>
+
+  <dialog id="submitDialog">
+    <form id="submitForm" class="dialog-form">
+      <div class="dialog-head"><div><div class="eyebrow">ДЛЯ СЛЕДУЮЩЕГО ЭФИРА</div><h2>Новое предложение</h2></div><button type="button" class="close-btn" data-close="submitDialog">×</button></div>
+      <label>Название<input id="itemTitle" maxlength="90" required placeholder="Как называется видео?"></label>
+      <label>Описание<textarea id="itemDescription" maxlength="500" rows="3" placeholder="Коротко расскажи, почему это стоит посмотреть"></textarea></label>
+      <label>Ссылка на видео (YouTube / Twitch / VK)<input id="itemUrl" type="url" placeholder="https://…"></label>
+      <div class="or-line"><span>или загрузи файл</span></div>
+      <label class="file-drop"><input id="itemFile" type="file" accept="video/mp4,video/webm,image/jpeg,image/png,image/webp" hidden><span class="upload-symbol">↑</span><b>Выбрать видео или изображение</b><small>MP4, WEBM, JPG, PNG · до 100 МБ</small><span id="fileName"></span></label>
+      <div class="form-row"><label>Категория<select id="itemCategory"><option>Клипы</option><option>Приколы</option><option>Игры</option><option>Видео</option><option>Вопросы</option></select></label><label>Тип<select id="itemType"><option value="media">Медиа</option><option value="question">Вопрос</option></select></label></div>
+      <p class="form-hint">После отправки предложение попадёт на модерацию. Не загружай чужие материалы без разрешения.</p>
+      <button class="primary-btn full" type="submit" id="submitButton">Отправить на модерацию</button>
+      <div id="submitMessage" class="message"></div>
+    </form>
+  </dialog>
+
+  <dialog id="authDialog">
+    <form id="authForm" class="dialog-form">
+      <div class="dialog-head"><div><div class="eyebrow">АККАУНТ СООБЩЕСТВА</div><h2 id="authTitle">Войти</h2></div><button type="button" class="close-btn" data-close="authDialog">×</button></div>
+      <label>Email<input id="authEmail" type="email" required placeholder="you@example.com"></label>
+      <label>Пароль<input id="authPassword" type="password" minlength="8" required placeholder="Минимум 8 символов"></label>
+      <button class="primary-btn full" type="submit" id="authSubmit">Войти</button>
+      <button type="button" class="text-btn" id="toggleAuth">Нет аккаунта? Зарегистрироваться</button>
+      <div id="authMessage" class="message"></div>
+    </form>
+  </dialog>
+
+  <dialog id="itemDialog"><div id="itemDetail" class="dialog-form"></div></dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
